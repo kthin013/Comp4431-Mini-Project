@@ -54,6 +54,13 @@
                 var percentage = parseInt($("#auto-contrast-percentage").val()) / 100.0;
                 imageproc.autoContrast(inputImage, outputImage, type, percentage);
                 break;
+
+            // Apply equalization
+            case "equalization":
+                var type = $("#equalization-type").val();
+                var percentage = parseInt($("#equalization-percentage").val()) / 100.0;
+                imageproc.equalization(inputImage, outputImage, type, percentage);
+                break;
         }
     }
 

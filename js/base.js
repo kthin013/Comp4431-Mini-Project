@@ -329,4 +329,89 @@
         }
     }
 
+    imageproc.equalization = function (inputData, outputData, type, percentage) {
+        console.log("Applying Equalization...");
+
+        // Find the number of pixels to ignore from the percentage
+        var pixelsToIgnore = (inputData.data.length / 4) * percentage;
+
+        var histogram, minMax;
+        if (type == "gray") {
+            // Build Histogram
+            histogram = buildHistogram(inputData, "gray");
+
+            // Find Min and Max
+            minMax = findMinMax(histogram, pixelsToIgnore);
+            var min = minMax.min, max = minMax.max, range = max - min;
+
+            // Calculate CDF
+            var cdf_grey = new Array(256).fill(0);
+            cdf_grey[0] = histogram[0];
+            for (var i = 1; i < cdf_grey.length; i++) {
+                cdf_grey[i] = cdf_grey[i - 1] + histogram[i];
+            }
+            // console.log(`histogram: ${histogram.length}, min: ${min}, max: ${max}, cdf_grey: ${cdf_grey.length} ${cdf_grey[255]}`);
+
+            //Normalized CDF
+            var normalized_cdf_grey = new Array(256).fill(0);
+            for (var i = 0; i < normalized_cdf_grey.length; i++) {
+                normalized_cdf_grey[i] = Math.floor((cdf_grey[i] * max) / cdf_grey[cdf_grey.length - 1]);
+            }
+            // console.log(`histogram.length: ${histogram.length}, min: ${min}, max: ${max}, cdf_grey: ${cdf_grey.length} ${cdf_grey[255]}`);
+
+            for (var i = 0; i < inputData.data.length; i += 4) {
+                outputData.data[i] = normalized_cdf_grey[inputData.data[i]];
+                outputData.data[i + 1] = normalized_cdf_grey[inputData.data[i + 1]];
+                outputData.data[i + 2] = normalized_cdf_grey[inputData.data[i + 2]];
+
+            }
+
+        }
+        else {
+            var histogramRed = buildHistogram(inputData, "red");
+            var minMaxRed = findMinMax(histogramRed, pixelsToIgnore);
+            var maxRed = minMaxRed.max;
+
+            var histogramGreen = buildHistogram(inputData, "green");
+            var minMaxGreen = findMinMax(histogramGreen, pixelsToIgnore);
+            var maxGreen = minMaxGreen.max;
+
+            var histogramBlue = buildHistogram(inputData, "blue");
+            var minMaxBlue = findMinMax(histogramBlue, pixelsToIgnore);
+            var maxBlue = minMaxBlue.max;
+
+            // Calculate CDF
+            var cdf_red = new Array(256).fill(0);
+            var cdf_green = new Array(256).fill(0);
+            var cdf_blue = new Array(256).fill(0);
+
+            cdf_red[0] = histogramRed[0];
+            cdf_green[0] = histogramGreen[0];
+            cdf_blue[0] = histogramBlue[0];
+
+            for (var i = 1; i < cdf_red.length; i++) {
+                cdf_red[i] = cdf_red[i - 1] + histogramRed[i];
+                cdf_green[i] = cdf_green[i - 1] + histogramGreen[i];
+                cdf_blue[i] = cdf_blue[i - 1] + histogramBlue[i];
+            }
+
+            //Normalized CDF
+            var normalized_cdf_red = new Array(256).fill(0);
+            var normalized_cdf_green = new Array(256).fill(0);
+            var normalized_cdf_blue = new Array(256).fill(0);
+
+            for (var i = 0; i < 256; i++) {
+                normalized_cdf_red[i] = Math.floor((cdf_red[i] * maxRed) / cdf_red[normalized_cdf_red.length - 1]);
+                normalized_cdf_green[i] = Math.floor((cdf_green[i] * maxGreen) / cdf_green[normalized_cdf_green.length - 1]);
+                normalized_cdf_blue[i] = Math.floor((cdf_blue[i] * maxBlue) / cdf_blue[normalized_cdf_blue.length - 1]);
+            }
+
+            for (var i = 0; i < inputData.data.length; i += 4) {
+                outputData.data[i] = normalized_cdf_red[inputData.data[i]];
+                outputData.data[i + 1] = normalized_cdf_green[inputData.data[i + 1]];
+                outputData.data[i + 2] = normalized_cdf_blue[inputData.data[i + 2]];
+            }
+        }
+    }
+
 }(window.imageproc = window.imageproc || {}));
