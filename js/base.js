@@ -1,5 +1,9 @@
 (function (imageproc) {
     "use strict";
+    var greyHistogram = null;
+    var redHistogram = null;
+    var greenHistogram = null;
+    var blueHistogram = null;
 
     /*
      * Apply negation to the input data
@@ -365,6 +369,57 @@
                 outputData.data[i + 2] = normalized_cdf_grey[inputData.data[i + 2]];
 
             }
+
+            const canvasGreyHistogram = document.getElementById('grey-histogram');
+            const dataGreyHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Grayscale Histogram',
+                    data: histogram,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+            ]
+            };
+
+            const options = {
+                scale: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Count'
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            suggestedMax: 255,
+                        }
+                    }]
+                },
+                height: 600,
+                width: 800,
+                responsive: false,
+                maintainAspectRatio: false,
+            };
+
+            // Create the histogram
+            if (greyHistogram != null) {
+                greyHistogram.destroy();
+            }
+
+            greyHistogram = new Chart(canvasGreyHistogram, {
+                type: 'bar',
+                data: dataGreyHistogram,
+                options: options,
+            });
 
         }
         else {
