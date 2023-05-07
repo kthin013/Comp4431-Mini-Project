@@ -197,7 +197,8 @@
             case "gray":
                 for (var i = 0; i < inputData.data.length; i += 4) {
                     var grayScale = (inputData.data[i] + inputData.data[i + 1] + inputData.data[i + 2]) / 3;
-                    histogram[grayScale] += 1;
+                    // histogram[grayScale] += 1;
+                    histogram[Math.round(grayScale)] += 1; // Round the grayscale value to the nearest integer
                 }
                 break;
         }
@@ -346,28 +347,30 @@
 
             // Find Min and Max
             minMax = findMinMax(histogram, pixelsToIgnore);
-            var min = minMax.min, max = minMax.max, range = max - min;
+            var min = minMax.min, max = minMax.max
 
-            // Calculate CDF
+            // Calculate CDF 
             var cdf_grey = new Array(256).fill(0);
-            cdf_grey[0] = histogram[0];
-            for (var i = 1; i < cdf_grey.length; i++) {
-                cdf_grey[i] = cdf_grey[i - 1] + histogram[i];
-            }
-            // console.log(`histogram: ${histogram.length}, min: ${min}, max: ${max}, cdf_grey: ${cdf_grey.length} ${cdf_grey[255]}`);
-
+            for (var i = 0; i < min; i++) 
+                histogram[i] = 0;   // ignoring min pixels
+            for (var i = ++max; i < histogram.length; i++)
+                histogram[i] = 0;  // ignoring max pixels
+            if (min == 0)
+                cdf_grey[0] = histogram[0];
+                
+            for (var i = 1; i < cdf_grey.length; i++) 
+                cdf_grey[i] = cdf_grey[i - 1] + histogram[i];   
+            
             //Normalized CDF
             var normalized_cdf_grey = new Array(256).fill(0);
-            for (var i = 0; i < normalized_cdf_grey.length; i++) {
-                normalized_cdf_grey[i] = Math.floor((cdf_grey[i] * max) / cdf_grey[cdf_grey.length - 1]);
-            }
-            // console.log(`histogram.length: ${histogram.length}, min: ${min}, max: ${max}, cdf_grey: ${cdf_grey.length} ${cdf_grey[255]}`);
+            for (var i = 0; i < normalized_cdf_grey.length; i++) 
+                normalized_cdf_grey[i] = Math.round((cdf_grey[i] - cdf_grey[0]) * (255) / (cdf_grey[cdf_grey.length - 1] - cdf_grey[0]));
 
+            // Apply equalization
             for (var i = 0; i < inputData.data.length; i += 4) {
                 outputData.data[i] = normalized_cdf_grey[inputData.data[i]];
                 outputData.data[i + 1] = normalized_cdf_grey[inputData.data[i + 1]];
                 outputData.data[i + 2] = normalized_cdf_grey[inputData.data[i + 2]];
-
             }
 
             const canvasGreyHistogram = document.getElementById('grey-histogram');
@@ -440,9 +443,33 @@
             var cdf_green = new Array(256).fill(0);
             var cdf_blue = new Array(256).fill(0);
 
-            cdf_red[0] = histogramRed[0];
-            cdf_green[0] = histogramGreen[0];
-            cdf_blue[0] = histogramBlue[0];
+            // Red Channel
+            for (var i = 0; i < minMaxRed.min; i++)
+                histogramRed[i] = 0;   // ignoring min pixels
+            for (var i = ++maxRed; i < histogramRed.length; i++)
+                histogramRed[i] = 0;  // ignoring max pixels
+            if (minMaxRed.min == 0)
+                cdf_red[0] = histogramRed[0];
+
+            // Green Channel
+            for (var i = 0; i < minMaxGreen.min; i++)
+                histogramGreen[i] = 0;   // ignoring min pixels
+            for (var i = ++maxGreen; i < histogramGreen.length; i++)
+                histogramGreen[i] = 0;  // ignoring max pixels
+            if (minMaxGreen.min == 0)
+                cdf_green[0] = histogramGreen[0];
+             
+            // Blue Channel
+            for (var i = 0; i < minMaxBlue.min; i++)
+                histogramBlue[i] = 0;   // ignoring min pixels
+            for (var i = ++maxBlue; i < histogramBlue.length; i++)
+                histogramBlue[i] = 0;  // ignoring max pixels
+            if (minMaxBlue.min == 0)
+                cdf_blue[0] = histogramBlue[0];
+            
+            // cdf_red[0] = histogramRed[0];
+            // cdf_green[0] = histogramGreen[0];
+            // cdf_blue[0] = histogramBlue[0];
 
             for (var i = 1; i < cdf_red.length; i++) {
                 cdf_red[i] = cdf_red[i - 1] + histogramRed[i];
@@ -456,9 +483,12 @@
             var normalized_cdf_blue = new Array(256).fill(0);
 
             for (var i = 0; i < 256; i++) {
-                normalized_cdf_red[i] = Math.floor((cdf_red[i] * maxRed) / cdf_red[normalized_cdf_red.length - 1]);
-                normalized_cdf_green[i] = Math.floor((cdf_green[i] * maxGreen) / cdf_green[normalized_cdf_green.length - 1]);
-                normalized_cdf_blue[i] = Math.floor((cdf_blue[i] * maxBlue) / cdf_blue[normalized_cdf_blue.length - 1]);
+                // normalized_cdf_red[i] = Math.floor((cdf_red[i] * maxRed) / cdf_red[normalized_cdf_red.length - 1]);
+                // normalized_cdf_green[i] = Math.floor((cdf_green[i] * maxGreen) / cdf_green[normalized_cdf_green.length - 1]);
+                // normalized_cdf_blue[i] = Math.floor((cdf_blue[i] * maxBlue) / cdf_blue[normalized_cdf_blue.length - 1]);
+                normalized_cdf_red[i] = Math.round((cdf_red[i] - cdf_red[0]) * (255) / (cdf_red[cdf_red.length - 1] - cdf_red[0]));
+                normalized_cdf_green[i] = Math.round((cdf_green[i] - cdf_green[0]) * (255) / (cdf_green[cdf_green.length - 1] - cdf_green[0]));
+                normalized_cdf_blue[i] = Math.round((cdf_blue[i] - cdf_blue[0]) * (255) / (cdf_blue[cdf_blue.length - 1] - cdf_blue[0]));
             }
 
             for (var i = 0; i < inputData.data.length; i += 4) {
