@@ -66,6 +66,13 @@
       margin: 20px 0px 20px 0px;
       display: none;
     }
+
+    .canvas-container-row-2 {
+      /* display: flex; */
+      flex-direction: row;
+      margin: 20px 0px 20px 0px;
+      display: none;
+    }
   </style>
 </head>
 
@@ -377,6 +384,27 @@
                     <div class="input-group-append">
                       <span class="input-group-text d-block" style="width: 4em"><span>5</span>%</span>
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div class="histogram-section">
+                <h5>Output Histogram</h5>
+                <div class="canvas-container">
+                  <div class="canvas-container-row-2" id="canvas-container-row-5">
+                    <canvas class="histogram" id="gray-histogram-3" width="480" height="360"></canvas>
+                    <canvas class="histogram" id="gray-histogram-4" width="480" height="360"></canvas>
+                  </div>
+                  <div class="canvas-container-row-2" id="canvas-container-row-6">
+                    <canvas class="histogram" id="red-histogram-3" width="480" height="360"></canvas>
+                    <canvas class="histogram" id="red-histogram-4" width="480" height="360"></canvas>
+                  </div>
+                  <div class="canvas-container-row-2" id="canvas-container-row-7">
+                    <canvas class="histogram" id="green-histogram-3" width="480" height="360"></canvas>
+                    <canvas class="histogram" id="green-histogram-4" width="480" height="360"></canvas>
+                  </div>
+                  <div class="canvas-container-row-2" id="canvas-container-row-8">
+                    <canvas class="histogram" id="blue-histogram-3" width="480" height="360"></canvas>
+                    <canvas class="histogram" id="blue-histogram-4" width="480" height="360"></canvas>
                   </div>
                 </div>
               </div>

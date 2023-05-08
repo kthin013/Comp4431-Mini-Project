@@ -2,12 +2,20 @@
     "use strict";
     var grayHistogram = null;
     var grayHistogram2 = null;
+    var grayHistogram3 = null;
+    var grayHistogram4 = null;
     var redHistogram = null;
     var greenHistogram = null;
     var blueHistogram = null;
     var redHistogram2 = null;
     var greenHistogram2 = null;
     var blueHistogram2 = null;
+    var redHistogram3 = null;
+    var greenHistogram3 = null;
+    var blueHistogram3 = null;
+    var redHistogram4 = null;
+    var greenHistogram4 = null;
+    var blueHistogram4 = null;
 
     /*
      * Apply negation to the input data
@@ -573,11 +581,42 @@
     imageproc.autoContrast = function (inputData, outputData, type, percentage) {
         console.log("Applying automatic contrast...");
 
+        const options = {
+            scale: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Count'
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        suggestedMax: 255,
+                    }
+                }]
+            },
+            height: 360,
+            width: 480,
+            responsive: false,
+            maintainAspectRatio: false,
+        };
         // Find the number of pixels to ignore from the percentage
         var pixelsToIgnore = (inputData.data.length / 4) * percentage;
 
-        var histogram, minMax;
+        var histogram, histogram2, minMax;
         if (type == "gray") {
+            document.getElementById('canvas-container-row-5').style.display = "flex";
+            document.getElementById('canvas-container-row-6').style.display = "none";
+            document.getElementById('canvas-container-row-7').style.display = "none";
+            document.getElementById('canvas-container-row-8').style.display = "none";
+
             // Build the grayscale histogram
             histogram = buildHistogram(inputData, "gray");
             // console.log(histogram.slice(0, 10).join(","));
@@ -615,8 +654,58 @@
                     outputData.data[i + 2] = 255;
                 }
             }
+            histogram2 = buildHistogram(outputData, "gray");
+
+            const canvasGreyHistogram3 = document.getElementById('gray-histogram-3');
+            const canvasGreyHistogram4 = document.getElementById('gray-histogram-4');
+
+            const dataGreyHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Original Grayscale Histogram',
+                    data: histogram,
+                    yAxisID: 'histogram-axis',
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    borderColor: 'rgba(0, 0, 0, 0.5)',
+                    borderWidth: 1
+                }]
+            };
+
+            const dataGreyHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Grayscale Histogram',
+                    data: histogram2,
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    borderColor: 'rgba(0, 0, 0, 0.5)',
+                    borderWidth: 1
+                }]
+            };
+
+            // Create the histogram
+            if (grayHistogram3 != null) {
+                grayHistogram3.destroy();
+            }
+            if (grayHistogram4 != null)
+                grayHistogram4.destroy();
+
+            grayHistogram3 = new Chart(canvasGreyHistogram3, {
+                type: 'bar',
+                data: dataGreyHistogram,
+                options: options,
+            });
+
+            grayHistogram4 = new Chart(canvasGreyHistogram4, {
+                type: 'bar',
+                data: dataGreyHistogram2,
+                options: options,
+            });
         }
         else {
+            document.getElementById('canvas-container-row-5').style.display = "none";
+            document.getElementById('canvas-container-row-6').style.display = "flex";
+            document.getElementById('canvas-container-row-7').style.display = "flex";
+            document.getElementById('canvas-container-row-8').style.display = "flex";
 
             /**
              * TODO: You need to apply the same procedure for each RGB channel
@@ -636,9 +725,9 @@
 
             for (var i = 0; i < inputData.data.length; i += 4) {
                 // Adjust each channel based on the histogram of each one
-                outputData.data[i] = (inputData.data[i] - minRed) / rangeRed * 255;
-                outputData.data[i + 1] = (inputData.data[i + 1] - minGreen) / rangeGreen * 255;
-                outputData.data[i + 2] = (inputData.data[i + 2] - minBlue) / rangeBlue * 255;
+                outputData.data[i] = Math.round((inputData.data[i] - minRed) / rangeRed * 255);
+                outputData.data[i + 1] = Math.round((inputData.data[i + 1] - minGreen) / rangeGreen * 255);
+                outputData.data[i + 2] = Math.round((inputData.data[i + 2] - minBlue) / rangeBlue * 255);
 
                 if (outputData.data[i] < 0) {
                     outputData.data[i] = 0;
@@ -659,6 +748,141 @@
                     outputData.data[i + 2] = 255;
                 }
             }
+
+            var histogramRed2 = buildHistogram(outputData, "red");
+            var histogramGreen2 = buildHistogram(outputData, "green");
+            var histogramBlue2 = buildHistogram(outputData, "blue");
+
+            const canvasRedHistogram3 = document.getElementById('red-histogram-3');
+            const canvasRedHistogram4 = document.getElementById('red-histogram-4');
+            const canvasGreenHistogram3 = document.getElementById('green-histogram-3');
+            const canvasGreenHistogram4 = document.getElementById('green-histogram-4');
+            const canvasBlueHistogram3 = document.getElementById('blue-histogram-3');
+            const canvasBlueHistogram4 = document.getElementById('blue-histogram-4');
+
+            const dataRedHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Original Red Histogram',
+                    data: histogramRed,
+                    yAxisID: 'histogram-axis',
+                    backgroundColor: 'rgba(255, 0, 0, 0.4)',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const dataRedHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Red Histogram',
+                    data: histogramRed2,
+                    backgroundColor: 'rgba(255, 0, 0, 0.4)',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const dataGreenHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Original Green Histogram',
+                    data: histogramGreen,
+                    yAxisID: 'histogram-axis',
+                    backgroundColor: 'rgba(0, 255, 0, 0.4)',
+                    borderColor: 'rgba(0, 255, 0, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const dataGreenHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Green Histogram',
+                    data: histogramGreen2,
+                    backgroundColor: 'rgba(0, 255, 0, 0.4)',
+                    borderColor: 'rgba(0, 255, 0, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const dataBlueHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Original Blue Histogram',
+                    data: histogramBlue,
+                    yAxisID: 'histogram-axis',
+                    backgroundColor: 'rgba(54, 162, 235, 0.4)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const dataBlueHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Blue Histogram',
+                    data: histogramBlue2,
+                    backgroundColor: 'rgba(54, 162, 235, 0.4)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            // Create the histogram
+            if (redHistogram3 != null) {
+                redHistogram3.destroy();
+            }
+            if (redHistogram4 != null)
+                redHistogram4.destroy();
+
+            if (greenHistogram3 != null) {
+                greenHistogram3.destroy();
+            }
+            if (greenHistogram4 != null)
+                greenHistogram4.destroy();
+
+            if (blueHistogram3 != null) {
+                blueHistogram3.destroy();
+            }
+            if (blueHistogram4 != null)
+                blueHistogram4.destroy();
+
+            redHistogram3 = new Chart(canvasRedHistogram3, {
+                type: 'bar',
+                data: dataRedHistogram,
+                options: options,
+            });
+
+            redHistogram4 = new Chart(canvasRedHistogram4, {
+                type: 'bar',
+                data: dataRedHistogram2,
+                options: options,
+            });
+
+            greenHistogram3 = new Chart(canvasGreenHistogram3, {
+                type: 'bar',
+                data: dataGreenHistogram,
+                options: options,
+            });
+
+            greenHistogram4 = new Chart(canvasGreenHistogram4, {
+                type: 'bar',
+                data: dataGreenHistogram2,
+                options: options,
+            });
+
+            blueHistogram3 = new Chart(canvasBlueHistogram3, {
+                type: 'bar',
+                data: dataBlueHistogram,
+                options: options,
+            });
+
+            blueHistogram4 = new Chart(canvasBlueHistogram4, {
+                type: 'bar',
+                data: dataBlueHistogram2,
+                options: options,
+            });
         }
     }
 
