@@ -1,7 +1,7 @@
 (function (imageproc) {
     "use strict";
-    var greyHistogram = null;
-    var greyHistogram2 = null;
+    var grayHistogram = null;
+    var grayHistogram2 = null;
     var redHistogram = null;
     var greenHistogram = null;
     var blueHistogram = null;
@@ -294,8 +294,8 @@
     */
     function visualiseHistogram(histogram, histogram2) {
 
-        const canvasGreyHistogram = document.getElementById('grey-histogram');
-        const canvasGreyHistogram2 = document.getElementById('grey-histogram-2');
+        const canvasGreyHistogram = document.getElementById('gray-histogram');
+        const canvasGreyHistogram2 = document.getElementById('gray-histogram-2');
 
         const dataGreyHistogram = {
             labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
@@ -349,19 +349,19 @@
         };
 
         // Create the histogram
-        if (greyHistogram != null) {
-            greyHistogram.destroy();
+        if (grayHistogram != null) {
+            grayHistogram.destroy();
         }
-        if (greyHistogram2 != null)
-            greyHistogram2.destroy();
+        if (grayHistogram2 != null)
+            grayHistogram2.destroy();
 
-        greyHistogram = new Chart(canvasGreyHistogram, {
+        grayHistogram = new Chart(canvasGreyHistogram, {
             type: 'bar',
             data: dataGreyHistogram,
             options: options,
         });
 
-        greyHistogram2 = new Chart(canvasGreyHistogram2, {
+        grayHistogram2 = new Chart(canvasGreyHistogram2, {
             type: 'bar',
             data: dataGreyHistogram2,
             options: options,
@@ -471,6 +471,12 @@
 
         var histogram, histogram2;
         if (type == "gray") {
+            // front-end visual control
+            document.getElementById('canvas-container-row-1').style.display = "flex";
+            document.getElementById('canvas-container-row-2').style.display = "none";
+            document.getElementById('canvas-container-row-3').style.display = "none";
+            document.getElementById('canvas-container-row-4').style.display = "none";
+
             // Build Histogram
             histogram = buildHistogram(inputData, "gray");
             var old_histogram = histogram.slice();
@@ -479,21 +485,21 @@
             updateHistogram(histogram, pixelsToIgnore);
 
             // Calculate CDF
-            var cdf_grey = new Array(256).fill(0);
-            cdf_grey[0] = histogram[0];
-            for (var i = 1; i < cdf_grey.length; i++)
-                cdf_grey[i] = cdf_grey[i - 1] + histogram[i];
+            var cdf_gray = new Array(256).fill(0);
+            cdf_gray[0] = histogram[0];
+            for (var i = 1; i < cdf_gray.length; i++)
+                cdf_gray[i] = cdf_gray[i - 1] + histogram[i];
 
             // Normalized CDF
-            var normalized_cdf_grey = new Array(256).fill(0);
-            for (var i = 0; i < normalized_cdf_grey.length; i++)
-                normalized_cdf_grey[i] = Math.round((cdf_grey[i] - cdf_grey[0]) * (255) / (cdf_grey[cdf_grey.length - 1] - cdf_grey[0]));
+            var normalized_cdf_gray = new Array(256).fill(0);
+            for (var i = 0; i < normalized_cdf_gray.length; i++)
+                normalized_cdf_gray[i] = Math.round((cdf_gray[i] - cdf_gray[0]) * (255) / (cdf_gray[cdf_gray.length - 1] - cdf_gray[0]));
 
             // Apply equalization
             for (var i = 0; i < inputData.data.length; i += 4) {
-                outputData.data[i] = normalized_cdf_grey[inputData.data[i]];
-                outputData.data[i + 1] = normalized_cdf_grey[inputData.data[i + 1]];
-                outputData.data[i + 2] = normalized_cdf_grey[inputData.data[i + 2]];
+                outputData.data[i] = normalized_cdf_gray[inputData.data[i]];
+                outputData.data[i + 1] = normalized_cdf_gray[inputData.data[i + 1]];
+                outputData.data[i + 2] = normalized_cdf_gray[inputData.data[i + 2]];
             }
             // Build Histogram
             histogram2 = buildHistogram(outputData, "gray");
@@ -501,6 +507,12 @@
 
         }
         else {
+            // front-end visual control
+            document.getElementById('canvas-container-row-1').style.display = "none"
+            document.getElementById('canvas-container-row-2').style.display = "flex";
+            document.getElementById('canvas-container-row-3').style.display = "flex";
+            document.getElementById('canvas-container-row-4').style.display = "flex";
+
             var histogramRed = buildHistogram(inputData, "red");
             var histogramGreen = buildHistogram(inputData, "green");
             var histogramBlue = buildHistogram(inputData, "blue");
