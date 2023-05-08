@@ -292,7 +292,7 @@
     /*
     * Visualisation of the histogram
     */
-    function visualiseHistogram(type, histogram, histogram2, cdf) {
+    function visualiseHistogram(type, histogram, histogram2, cdf, cdf2) {
         const options = {
             scale: {
                 xAxes: [{
@@ -330,9 +330,17 @@
                     label: 'Original Grayscale Histogram',
                     data: histogram,
                     yAxisID: 'histogram-axis',
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    borderColor: 'rgba(0, 0, 0, 0.5)',
                     borderWidth: 1
+                },
+                {
+                    label: 'CDF',
+                    data: cdf,
+                    yAxisID: 'cdf-axis',
+                    type: 'line',
+                    borderColor: 'rgba(0, 0, 0, 0.7)',
+                    fill: false
                 }]
             };
 
@@ -341,16 +349,16 @@
                 datasets: [{
                     label: 'Equalized Grayscale Histogram',
                     data: histogram2,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    borderColor: 'rgba(0, 0, 0, 0.5)',
                     borderWidth: 1
                 },
                 {
-                    label: 'CDF',
-                    data: cdf,
+                    label: 'New CDF',
+                    data: cdf2,
                     yAxisID: 'cdf-axis',
                     type: 'line',
-                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderColor: 'rgba(0, 0, 0, 0.7)',
                     fill: false
                 }]
             };
@@ -383,9 +391,17 @@
                 datasets: [{
                     label: 'Original Red Histogram',
                     data: histogram,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(255, 0, 0, 0.4)',
+                    borderColor: 'rgba(255, 0, 0, 1)',
                     borderWidth: 1
+                },
+                {
+                    label: 'CDF',
+                    data: cdf,
+                    yAxisID: 'cdf-axis',
+                    type: 'line',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    fill: false
                 }]
             };
 
@@ -394,13 +410,13 @@
                 datasets: [{
                     label: 'Equalized Red Histogram',
                     data: histogram2,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(255, 0, 0, 0.4)',
+                    borderColor: 'rgba(255, 0, 0, 1)',
                     borderWidth: 1
                 },
                 {
-                    label: 'CDF',
-                    data: cdf,
+                    label: 'New CDF',
+                    data: cdf2,
                     yAxisID: 'cdf-axis',
                     type: 'line',
                     borderColor: 'rgba(255, 0, 0, 1)',
@@ -436,19 +452,7 @@
                 datasets: [{
                     label: 'Original Blue Histogram',
                     data: histogram,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                },
-                ]
-            };
-
-            const dataBlueHistogram2 = {
-                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
-                datasets: [{
-                    label: 'Equalized Blue Histogram',
-                    data: histogram2,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.4)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 },
@@ -457,7 +461,26 @@
                     data: cdf,
                     yAxisID: 'cdf-axis',
                     type: 'line',
-                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    fill: false
+                }]
+            };
+
+            const dataBlueHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Blue Histogram',
+                    data: histogram2,
+                    backgroundColor: 'rgba(54, 162, 235, 0.4)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'New CDF',
+                    data: cdf2,
+                    yAxisID: 'cdf-axis',
+                    type: 'line',
+                    borderColor: 'rgba(54, 162, 235, 1)',
                     fill: false
                 }]
             };
@@ -490,9 +513,17 @@
                 datasets: [{
                     label: 'Original Green Histogram',
                     data: histogram,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(0, 255, 0, 0.4)',
+                    borderColor: 'rgba(0, 255, 0, 1)',
                     borderWidth: 1
+                },
+                {
+                    label: 'CDF',
+                    data: cdf,
+                    yAxisID: 'cdf-axis',
+                    type: 'line',
+                    borderColor: 'rgba(0, 255, 0, 1)',
+                    fill: false
                 }]
             };
 
@@ -501,16 +532,16 @@
                 datasets: [{
                     label: 'Equalized Green Histogram',
                     data: histogram2,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(0, 255, 0, 0.4)',
+                    borderColor: 'rgba(0, 255, 0, 1)',
                     borderWidth: 1
                 },
                 {
-                    label: 'CDF',
-                    data: cdf,
+                    label: 'New CDF',
+                    data: cdf2,
                     yAxisID: 'cdf-axis',
                     type: 'line',
-                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderColor: 'rgba(0, 255, 0, 1)',
                     fill: false
                 }]
             };
@@ -672,7 +703,13 @@
             }
             // Build Histogram
             histogram2 = buildHistogram(outputData, "gray");
-            visualiseHistogram("gray", old_histogram, histogram2, cdf_gray);
+            // New CDF
+            var cdf_gray2 = new Array(256).fill(0);
+            cdf_gray2[0] = histogram2[0];
+            for (var i = 1; i < cdf_gray2.length; i++)
+                cdf_gray2[i] = cdf_gray2[i - 1] + histogram2[i];
+
+            visualiseHistogram("gray", old_histogram, histogram2, cdf_gray, cdf_gray2);
 
         }
         else {
@@ -726,13 +763,27 @@
                 outputData.data[i + 2] = normalized_cdf_blue[inputData.data[i + 2]];
             }
 
-            // Build Histogram
+            // Build equalized Histogram
             var histogramRed2 = buildHistogram(outputData, "red");
             var histogramGreen2 = buildHistogram(outputData, "green");
             var histogramBlue2 = buildHistogram(outputData, "blue");
-            visualiseHistogram("red", old_histogramRed, histogramRed2, cdf_red);
-            visualiseHistogram("green", old_histogramGreen, histogramGreen2, cdf_green);
-            visualiseHistogram("blue", old_histogramBlue, histogramBlue2, cdf_blue);
+
+            // Equalized CDF
+            var cdf_red2 = new Array(256).fill(0);
+            var cdf_green2 = new Array(256).fill(0);
+            var cdf_blue2 = new Array(256).fill(0);
+            cdf_red2[0] = histogramRed2[0];
+            cdf_green2[0] = histogramGreen2[0];
+            cdf_blue2[0] = histogramBlue2[0];
+            for (var i = 1; i < cdf_red2.length; i++) {
+                cdf_red2[i] = cdf_red2[i - 1] + histogramRed2[i];
+                cdf_green2[i] = cdf_green2[i - 1] + histogramGreen2[i];
+                cdf_blue2[i] = cdf_blue2[i - 1] + histogramBlue2[i];
+            }
+            // Visualise Histogram
+            visualiseHistogram("red", old_histogramRed, histogramRed2, cdf_red, cdf_red2);
+            visualiseHistogram("green", old_histogramGreen, histogramGreen2, cdf_green, cdf_green2);
+            visualiseHistogram("blue", old_histogramBlue, histogramBlue2, cdf_blue, cdf_blue2);
 
         }
     }
