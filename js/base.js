@@ -292,35 +292,7 @@
     /*
     * Visualisation of the histogram
     */
-    function visualiseHistogram(histogram, histogram2) {
-
-        const canvasGreyHistogram = document.getElementById('gray-histogram');
-        const canvasGreyHistogram2 = document.getElementById('gray-histogram-2');
-
-        const dataGreyHistogram = {
-            labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
-            datasets: [{
-                label: 'Original Grayscale Histogram',
-                data: histogram,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            },
-            ]
-        };
-
-        const dataGreyHistogram2 = {
-            labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
-            datasets: [{
-                label: 'Equalized Grayscale Histogram',
-                data: histogram2,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            },
-            ]
-        };
-
+    function visualiseHistogram(type, histogram, histogram2, cdf) {
         const options = {
             scale: {
                 xAxes: [{
@@ -348,24 +320,220 @@
             maintainAspectRatio: false,
         };
 
-        // Create the histogram
-        if (grayHistogram != null) {
-            grayHistogram.destroy();
+        if (type == "gray") {
+            const canvasGreyHistogram = document.getElementById('gray-histogram');
+            const canvasGreyHistogram2 = document.getElementById('gray-histogram-2');
+
+            const dataGreyHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Original Grayscale Histogram',
+                    data: histogram,
+                    yAxisID: 'histogram-axis',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const dataGreyHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Grayscale Histogram',
+                    data: histogram2,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'CDF',
+                    data: cdf,
+                    yAxisID: 'cdf-axis',
+                    type: 'line',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    fill: false
+                }]
+            };
+
+            // Create the histogram
+            if (grayHistogram != null) {
+                grayHistogram.destroy();
+            }
+            if (grayHistogram2 != null)
+                grayHistogram2.destroy();
+
+            grayHistogram = new Chart(canvasGreyHistogram, {
+                type: 'bar',
+                data: dataGreyHistogram,
+                options: options,
+            });
+
+            grayHistogram2 = new Chart(canvasGreyHistogram2, {
+                type: 'bar',
+                data: dataGreyHistogram2,
+                options: options,
+            });
         }
-        if (grayHistogram2 != null)
-            grayHistogram2.destroy();
+        if (type == "red") {
+            const canvasRedHistogram = document.getElementById('red-histogram');
+            const canvasRedHistogram2 = document.getElementById('red-histogram-2');
 
-        grayHistogram = new Chart(canvasGreyHistogram, {
-            type: 'bar',
-            data: dataGreyHistogram,
-            options: options,
-        });
+            const dataRedHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Original Red Histogram',
+                    data: histogram,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
 
-        grayHistogram2 = new Chart(canvasGreyHistogram2, {
-            type: 'bar',
-            data: dataGreyHistogram2,
-            options: options,
-        });
+            const dataRedHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Red Histogram',
+                    data: histogram2,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'CDF',
+                    data: cdf,
+                    yAxisID: 'cdf-axis',
+                    type: 'line',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    fill: false
+                }]
+            };
+
+            // Create the histogram
+            if (redHistogram != null) {
+                redHistogram.destroy();
+            }
+            if (redHistogram2 != null)
+                redHistogram2.destroy();
+
+            redHistogram = new Chart(canvasRedHistogram, {
+                type: 'bar',
+                data: dataRedHistogram,
+                options: options,
+            });
+
+            redHistogram2 = new Chart(canvasRedHistogram2, {
+                type: 'bar',
+                data: dataRedHistogram2,
+                options: options,
+            });
+        }
+        if (type == "blue") {
+            const canvasBlueHistogram = document.getElementById('blue-histogram');
+            const canvasBlueHistogram2 = document.getElementById('blue-histogram-2');
+
+            const dataBlueHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Original Blue Histogram',
+                    data: histogram,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                ]
+            };
+
+            const dataBlueHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Blue Histogram',
+                    data: histogram2,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'CDF',
+                    data: cdf,
+                    yAxisID: 'cdf-axis',
+                    type: 'line',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    fill: false
+                }]
+            };
+
+            // Create the histogram
+            if (blueHistogram != null) {
+                blueHistogram.destroy();
+            }
+            if (blueHistogram2 != null)
+                blueHistogram2.destroy();
+
+            blueHistogram = new Chart(canvasBlueHistogram, {
+                type: 'bar',
+                data: dataBlueHistogram,
+                options: options,
+            });
+
+            blueHistogram2 = new Chart(canvasBlueHistogram2, {
+                type: 'bar',
+                data: dataBlueHistogram2,
+                options: options,
+            });
+        }
+        if (type == "green") {
+            const canvasGreenHistogram = document.getElementById('green-histogram');
+            const canvasGreenHistogram2 = document.getElementById('green-histogram-2');
+
+            const dataGreenHistogram = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Original Green Histogram',
+                    data: histogram,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const dataGreenHistogram2 = {
+                labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
+                datasets: [{
+                    label: 'Equalized Green Histogram',
+                    data: histogram2,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'CDF',
+                    data: cdf,
+                    yAxisID: 'cdf-axis',
+                    type: 'line',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    fill: false
+                }]
+            };
+
+            // Create the histogram
+            if (greenHistogram != null) {
+                greenHistogram.destroy();
+            }
+            if (greenHistogram2 != null)
+                greenHistogram2.destroy();
+
+            greenHistogram = new Chart(canvasGreenHistogram, {
+                type: 'bar',
+                data: dataGreenHistogram,
+                options: options,
+            });
+
+            greenHistogram2 = new Chart(canvasGreenHistogram2, {
+                type: 'bar',
+                data: dataGreenHistogram2,
+                options: options,
+            });
+        }
     }
 
     /*
@@ -469,8 +637,9 @@
         // Find the number of pixels to ignore from the percentage
         var pixelsToIgnore = (inputData.data.length / 4) * percentage;
 
-        var histogram, histogram2;
         if (type == "gray") {
+            var histogram, histogram2;
+
             // front-end visual control
             document.getElementById('canvas-container-row-1').style.display = "flex";
             document.getElementById('canvas-container-row-2').style.display = "none";
@@ -503,7 +672,7 @@
             }
             // Build Histogram
             histogram2 = buildHistogram(outputData, "gray");
-            visualiseHistogram(old_histogram, histogram2);
+            visualiseHistogram("gray", old_histogram, histogram2, cdf_gray);
 
         }
         else {
@@ -556,6 +725,15 @@
                 outputData.data[i + 1] = normalized_cdf_green[inputData.data[i + 1]];
                 outputData.data[i + 2] = normalized_cdf_blue[inputData.data[i + 2]];
             }
+
+            // Build Histogram
+            var histogramRed2 = buildHistogram(outputData, "red");
+            var histogramGreen2 = buildHistogram(outputData, "green");
+            var histogramBlue2 = buildHistogram(outputData, "blue");
+            visualiseHistogram("red", old_histogramRed, histogramRed2, cdf_red);
+            visualiseHistogram("green", old_histogramGreen, histogramGreen2, cdf_green);
+            visualiseHistogram("blue", old_histogramBlue, histogramBlue2, cdf_blue);
+
         }
     }
 
