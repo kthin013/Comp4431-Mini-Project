@@ -5,6 +5,9 @@
     var redHistogram = null;
     var greenHistogram = null;
     var blueHistogram = null;
+    var redHistogram2 = null;
+    var greenHistogram2 = null;
+    var blueHistogram2 = null;
 
     /*
      * Apply negation to the input data
@@ -259,7 +262,7 @@
                 if (min_count + histogram[min] < pixelsToIgnore) {
                     min_count += histogram[min];
                     histogram[min] = 0;
-                }    
+                }
                 else {
                     histogram[min] -= (pixelsToIgnore - min_count);
                     min_count += pixelsToIgnore - min_count;
@@ -286,13 +289,13 @@
         return { "min": min, "max": max };
     }
 
-     /*
-     * Visualisation of the histogram
-     */
+    /*
+    * Visualisation of the histogram
+    */
     function visualiseHistogram(histogram, histogram2) {
-        
+
         const canvasGreyHistogram = document.getElementById('grey-histogram');
-        const canvasGreyHistogram2 = document.getElementById('histogram2');
+        const canvasGreyHistogram2 = document.getElementById('grey-histogram-2');
 
         const dataGreyHistogram = {
             labels: Array.from({ length: 256 }, (_, i) => i), // create an array with 256 labels from 0 to 255
@@ -303,7 +306,7 @@
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             },
-        ]
+            ]
         };
 
         const dataGreyHistogram2 = {
@@ -315,7 +318,7 @@
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             },
-        ]
+            ]
         };
 
         const options = {
@@ -339,8 +342,8 @@
                     }
                 }]
             },
-            height: 600,
-            width: 800,
+            height: 360,
+            width: 480,
             responsive: false,
             maintainAspectRatio: false,
         };
@@ -349,7 +352,7 @@
         if (greyHistogram != null) {
             greyHistogram.destroy();
         }
-        if (greyHistogram2 != null) 
+        if (greyHistogram2 != null)
             greyHistogram2.destroy();
 
         greyHistogram = new Chart(canvasGreyHistogram, {
@@ -358,7 +361,7 @@
             options: options,
         });
 
-        greyHistogram2 = new Chart(canvasGreyHistogram2, {    
+        greyHistogram2 = new Chart(canvasGreyHistogram2, {
             type: 'bar',
             data: dataGreyHistogram2,
             options: options,
@@ -471,19 +474,19 @@
             // Build Histogram
             histogram = buildHistogram(inputData, "gray");
             var old_histogram = histogram.slice();
-            
+
             // Update Histogram with pixels to ignore
             updateHistogram(histogram, pixelsToIgnore);
-            
+
             // Calculate CDF
             var cdf_grey = new Array(256).fill(0);
             cdf_grey[0] = histogram[0];
             for (var i = 1; i < cdf_grey.length; i++)
                 cdf_grey[i] = cdf_grey[i - 1] + histogram[i];
-            
+
             // Normalized CDF
             var normalized_cdf_grey = new Array(256).fill(0);
-            for (var i = 0; i < normalized_cdf_grey.length; i++) 
+            for (var i = 0; i < normalized_cdf_grey.length; i++)
                 normalized_cdf_grey[i] = Math.round((cdf_grey[i] - cdf_grey[0]) * (255) / (cdf_grey[cdf_grey.length - 1] - cdf_grey[0]));
 
             // Apply equalization

@@ -45,8 +45,9 @@
     }
 
     .histogram {
-      width: 800px;
-      height: 600px;
+      width: 480px;
+      height: 360px;
+      margin: 0px 15px 0px 15px;
     }
 
     .histogram-section {
@@ -58,7 +59,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+    .canvas-container-row {
+      /* display: flex; */
+      flex-direction: row;
       margin: 20px 0px 20px 0px;
+      display: none;
     }
   </style>
 </head>
@@ -405,9 +411,22 @@
               <div class="histogram-section">
                 <h5>Output Histogram</h5>
                 <div class="canvas-container">
-                  <canvas class="histogram" id="grey-histogram" width="800" height="600"></canvas>
-                  <canvas class="histogram" id="histogram2" width="800" height="600"></canvas>
-
+                  <div class="canvas-container-row" id="canvas-container-row-1">
+                    <canvas class="histogram" id="gray-histogram" width="480" height="360"></canvas>
+                    <canvas class="histogram" id="grey-histogram-2" width="480" height="360"></canvas>
+                  </div>
+                  <div class="canvas-container-row" id="canvas-container-row-2">
+                    <canvas class="histogram" id="red-histogram" width="480" height="360"></canvas>
+                    <canvas class="histogram" id="red-histogram-2" width="480" height="360"></canvas>
+                  </div>
+                  <div class="canvas-container-row" id="canvas-container-row-3">
+                    <canvas class="histogram" id="green-histogram" width="480" height="360"></canvas>
+                    <canvas class="histogram" id="green-histogram-2" width="480" height="360"></canvas>
+                  </div>
+                  <div class="canvas-container-row" id="canvas-container-row-4">
+                    <canvas class="histogram" id="blue-histogram" width="480" height="360"></canvas>
+                    <canvas class="histogram" id="blue-histogram-2" width="480" height="360"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
